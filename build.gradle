@@ -1,0 +1,49 @@
+plugins {
+  id 'java'
+}
+
+group = 'com.github.tonivade'
+version = '0.1-SNAPSHOT'
+
+repositories {
+  mavenLocal() 
+  mavenCentral()
+  maven {
+    url = 'https://oss.sonatype.org/content/repositories/snapshots'
+  }
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+  withJavadocJar()
+  withSourcesJar()
+}
+
+compileJava {
+  options.compilerArgs << '-Xlint:unchecked'
+  options.compilerArgs << '-Xlint:rawtypes'
+  options.release = 21
+}
+
+compileTestJava {
+  options.compilerArgs << '-Xlint:unchecked'
+  options.compilerArgs << '-Xlint:rawtypes'
+  options.release = 21
+}
+
+test {
+  useJUnitPlatform()
+
+  reports.html.required = true
+}
+
+dependencies {
+  implementation "com.github.tonivade:purefun-monad:$purefunVersion"
+  implementation "com.github.tonivade:purefun-effect:$purefunVersion"
+  implementation "com.github.tonivade:purefun-transformer:$purefunVersion"
+  runtimeOnly "com.github.tonivade:purefun-instances:$purefunVersion"
+  testImplementation "org.junit.jupiter:junit-jupiter-engine:5.11.2"
+  testImplementation "org.junit.platform:junit-platform-runner:1.11.2"
+}
