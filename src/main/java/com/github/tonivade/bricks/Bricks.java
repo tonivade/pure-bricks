@@ -50,12 +50,8 @@ public class Bricks {
         .flatMap(n -> print("%d tiles left", n));
 
   static final StateT<IO<?>, Matrix, Unit> exit =
-      printMatrix.andThen(numberOfTiles).flatMap(n -> {
-        if (n > 0) {
-          return print("Gameover!!!");
-        }
-        return print("You win!!!");
-      });
+      printMatrix.andThen(numberOfTiles)
+        .flatMap(n -> n > 0 ? print("Gameover!!!") : print("You win!!!"));
 
   static final StateT<IO<?>, Matrix, Try<Position>> readPosition =
       StateT.map2(
