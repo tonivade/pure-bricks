@@ -28,7 +28,8 @@ public class Bricks {
   static final StateT<IO<?>, Matrix, Unit> quit = StateT.lift(monad, IO.unit());
 
   static final StateT<IO<?>, Matrix, Unit> click(Position position) {
-    return print("Clicked %s", position).andThen(StateT.lift(monad, Matrix.clickS(position)::run));
+    return print("Clicked %s", position)
+        .andThen(StateT.lift(monad, Matrix.clickS(position)::run));
   }
 
   static final StateT<IO<?>, Matrix, String> toString = StateT.inspect(monad, Matrix::toString);
