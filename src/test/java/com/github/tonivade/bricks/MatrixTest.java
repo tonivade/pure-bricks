@@ -44,4 +44,31 @@ class MatrixTest {
     assertEquals(none(), matrix1.atPosition(new Position(0, 0)));
     assertEquals(some(new Tile(new Position(1, 1), Color.RED)), matrix1.atPosition(new Position(1, 1)));
   }
+
+  @Test
+  void shouldCleanAColumnOfTiles() {
+    var matrix0 = new Matrix(3, 3,
+        arrayOf(new Tile(new Position(0, 0), Color.RED),
+                new Tile(new Position(0, 1), Color.BLUE),
+                new Tile(new Position(0, 2), Color.YELLOW)));
+
+    System.out.println(matrix0.toString());
+    var matrix1 = matrix0.cleanColumn(0);
+    System.out.println(matrix1.toString());
+
+    assertFalse(matrix0.isEmpty());
+    assertTrue(matrix1.isEmpty());
+  }
+
+  @Test
+  void shouldMoveAColumnOfTiles() {
+    var matrix0 = new Matrix(3, 3,
+        arrayOf(new Tile(new Position(0, 0), Color.RED),
+                new Tile(new Position(0, 1), Color.BLUE),
+                new Tile(new Position(0, 2), Color.YELLOW)));
+
+    System.out.println(matrix0.toString());
+    var matrix1 = matrix0.moveColumn(0, 2);
+    System.out.println(matrix1.toString());
+  }
 }
