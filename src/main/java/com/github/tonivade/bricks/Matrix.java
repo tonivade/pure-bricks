@@ -215,7 +215,7 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
     Range.of(0, width).forEach(x -> builder.append(x));
     builder.append("\n");
 
-    Range.of(0, height).collect().reverse().forEach(y -> {
+    Range.of(0, height).reverse().forEach(y -> {
       if (y < 10) {
         builder.append(" ");
       }
