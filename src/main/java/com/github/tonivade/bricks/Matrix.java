@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2024, Antonio Gabriel Muñoz Conejo <me at tonivade dot es>
+ * Distributed under the terms of the MIT License
+ */
 package com.github.tonivade.bricks;
 
 import static com.github.tonivade.purefun.core.Function1.identity;
@@ -61,18 +65,18 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
     return clean(arrayOf(tile.position())).addTiles(arrayOf(new Tile(position, tile.color())));
   }
 
-  public Matrix moveColumn(int fromX, int toX) {
-    var newColumn = col(fromX)
-        .map(p -> atPosition(p).map(t -> new Tile(new Position(toX, p.y()), t.color())))
+  public Matrix moveColumn(int from, int to) {
+    var newColumn = col(from)
+        .map(p -> atPosition(p).map(t -> new Tile(new Position(to, p.y()), t.color())))
         .flatMap(Option::sequence);
-    return cleanColumn(fromX).addTiles(newColumn);
+    return cleanColumn(from).addTiles(newColumn);
   }
 
-  public Matrix moveRow(int fromY, int toY) {
-    var newRow = row(fromY)
-        .map(p -> atPosition(p).map(t -> new Tile(new Position(p.x(), toY), t.color())))
+  public Matrix moveRow(int from, int to) {
+    var newRow = row(from)
+        .map(p -> atPosition(p).map(t -> new Tile(new Position(p.x(), to), t.color())))
         .flatMap(Option::sequence);
-    return cleanRow(fromY).addTiles(newRow);
+    return cleanRow(from).addTiles(newRow);
   }
 
   public Matrix cleanRow(int y) {
@@ -101,6 +105,14 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
 
   public Option<Tile> atPosition(Position position) {
     return bricks.get(position);
+  }
+
+  public Sequence<Tile> atCol(int x) {
+    return col(x).map(this::atPosition).flatMap(Option::sequence);
+  }
+
+  public Sequence<Tile> atRow(int y) {
+    return row(y).map(this::atPosition).flatMap(Option::sequence);
   }
 
   public boolean isPresent(Position position) {
@@ -142,11 +154,11 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
     return Range.of(0, height).map(y -> new Position(x, y)).asArray();
   }
 
-  private Matrix fall() {
+  public Matrix fall() {
     return fallCol(0);
   }
 
-  private Matrix shift() {
+  public Matrix shift() {
     return shiftCol(0);
   }
 
@@ -212,7 +224,7 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
     var builder = new StringBuilder();
 
     builder.append("  ");
-    Range.of(0, width).forEach(x -> builder.append(x));
+    Range.of(0, width).forEach(builder::append);
     builder.append("\n");
 
     Range.of(0, height).reverse().forEach(y -> {
