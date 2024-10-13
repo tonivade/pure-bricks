@@ -13,7 +13,7 @@ class MatrixTest {
   void shouldBeEmptyWhenNoTiles() {
     var matrix = new Matrix(3, 3);
 
-    System.out.println(matrix.toString());
+    System.out.println(matrix);
 
     assertTrue(matrix.isEmpty());
     assertEquals(0, matrix.size());
@@ -23,7 +23,7 @@ class MatrixTest {
   void shouldNotEmptyWhenShuffle() {
     var matrix = new Matrix(3, 3).shuffle(ignore -> Color.RED);
 
-    System.out.println(matrix.toString());
+    System.out.println(matrix);
 
     assertFalse(matrix.isEmpty());
     assertEquals(9, matrix.size());
@@ -35,9 +35,9 @@ class MatrixTest {
   void shouldMoveTiles() {
     var matrix0 = new Matrix(3, 3, arrayOf(new Tile(new Position(0, 0), Color.RED)));
 
-    System.out.println(matrix0.toString());
+    System.out.println(matrix0);
     var matrix1 = matrix0.atPosition(new Position(0, 0)).map(tile -> matrix0.move(tile, new Position(1, 1))).getOrElseThrow();
-    System.out.println(matrix1.toString());
+    System.out.println(matrix1);
 
     assertEquals(some(new Tile(new Position(0, 0), Color.RED)), matrix0.atPosition(new Position(0, 0)));
     assertEquals(none(), matrix0.atPosition(new Position(1, 1)));
@@ -52,9 +52,9 @@ class MatrixTest {
                 new Tile(new Position(0, 1), Color.BLUE),
                 new Tile(new Position(0, 2), Color.YELLOW)));
 
-    System.out.println(matrix0.toString());
+    System.out.println(matrix0);
     var matrix1 = matrix0.cleanColumn(0);
-    System.out.println(matrix1.toString());
+    System.out.println(matrix1);
 
     assertFalse(matrix0.isEmpty());
     assertTrue(matrix1.isEmpty());
@@ -67,8 +67,8 @@ class MatrixTest {
                 new Tile(new Position(0, 1), Color.BLUE),
                 new Tile(new Position(0, 2), Color.YELLOW)));
 
-    System.out.println(matrix0.toString());
+    System.out.println(matrix0);
     var matrix1 = matrix0.moveColumn(0, 2);
-    System.out.println(matrix1.toString());
+    System.out.println(matrix1);
   }
 }
