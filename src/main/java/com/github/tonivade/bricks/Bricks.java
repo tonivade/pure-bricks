@@ -4,6 +4,7 @@
  */
 package com.github.tonivade.bricks;
 
+import static com.github.tonivade.purefun.core.Unit.unit;
 import static java.lang.Integer.parseInt;
 
 import com.github.tonivade.purefun.core.Unit;
@@ -29,7 +30,7 @@ public class Bricks {
     return StateT.lift(monad, console.printf(text, args));
   }
 
-  static final StateT<IO<?>, Matrix, Unit> quit = StateT.lift(monad, IO.unit());
+  static final StateT<IO<?>, Matrix, Unit> quit = StateT.pure(monad, unit());
 
   static final StateT<IO<?>, Matrix, Unit> click(Position position) {
     return print("Clicked %s", position)
