@@ -13,7 +13,6 @@ import static com.github.tonivade.purefun.data.Sequence.arrayOf;
 import static com.github.tonivade.purefun.data.Sequence.emptyArray;
 
 import com.github.tonivade.purefun.core.Function1;
-import com.github.tonivade.purefun.core.Matcher1;
 import com.github.tonivade.purefun.core.Tuple;
 import com.github.tonivade.purefun.core.Tuple2;
 import com.github.tonivade.purefun.core.Unit;
@@ -203,7 +202,7 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
 
   private Option<Integer> nextX(int left) {
     return row(0).takeWhile(p -> p.x() < left)
-        .findFirst(Matcher1.not(this::isPresent)).map(Position::y);
+        .findFirst(not(this::isPresent)).map(Position::y);
   }
 
   private Option<Integer> nextY(int col, int top) {
