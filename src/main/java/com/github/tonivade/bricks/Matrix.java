@@ -240,11 +240,6 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
   }
 
   private String printTile(Integer x, Integer y) {
-    return atPosition(new Position(x, y)).map(tile -> switch(tile.color()) {
-      case RED -> "R";
-      case GREEN -> "G";
-      case BLUE -> "B";
-      case YELLOW -> "Y";
-      }).getOrElse(" ");
+    return atPosition(new Position(x, y)).map(tile -> tile.color().toString()).getOrElse(" ");
   }
 }
