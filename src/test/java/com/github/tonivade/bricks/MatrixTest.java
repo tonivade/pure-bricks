@@ -10,11 +10,19 @@ import static com.github.tonivade.purefun.type.Option.none;
 import static com.github.tonivade.purefun.type.Option.some;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import com.github.tonivade.purefun.data.ImmutableMap;
 import org.junit.jupiter.api.Test;
 
 class MatrixTest {
+
+  @Test
+  void shouldCheckHeightWidthMap() {
+    assertThrows(IllegalArgumentException.class, () -> new Matrix(1, 0));
+    assertThrows(IllegalArgumentException.class, () -> new Matrix(0, 1));
+    assertThrows(IllegalArgumentException.class, () -> new Matrix(1, 1, (ImmutableMap<Position, Tile>) null));
+  }
 
   @Test
   void shouldBeEmptyWhenNoTiles() {

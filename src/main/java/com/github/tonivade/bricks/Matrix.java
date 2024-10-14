@@ -6,6 +6,8 @@ package com.github.tonivade.bricks;
 
 import static com.github.tonivade.purefun.core.Function1.identity;
 import static com.github.tonivade.purefun.core.Matcher1.not;
+import static com.github.tonivade.purefun.core.Precondition.checkNonNull;
+import static com.github.tonivade.purefun.core.Precondition.checkPositive;
 import static com.github.tonivade.purefun.data.ImmutableMap.toImmutableMap;
 import static com.github.tonivade.purefun.data.Sequence.arrayOf;
 import static com.github.tonivade.purefun.data.Sequence.emptyArray;
@@ -24,6 +26,12 @@ import com.github.tonivade.purefun.monad.State;
 import com.github.tonivade.purefun.type.Option;
 
 public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks) {
+
+  public Matrix {
+    checkPositive(width);
+    checkPositive(height);
+    checkNonNull(bricks);
+  }
 
   public Matrix(int width, int height) {
     this(width, height, emptyArray());
