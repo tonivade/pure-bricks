@@ -9,11 +9,29 @@ import com.github.tonivade.purefun.core.Unit;
 import com.github.tonivade.purefun.monad.IO;
 import com.github.tonivade.purefun.monad.IOOf;
 import com.github.tonivade.purefun.transformer.StateT;
+import com.github.tonivade.purefun.type.Try;
 import com.github.tonivade.purefun.typeclasses.Console;
 import com.github.tonivade.purefun.typeclasses.Instances;
 import com.github.tonivade.purefun.typeclasses.Monad;
 
 public class Bricks {
+
+  static final StateT<IO<?>, Matrix, Unit> mainLoop() {
+    return print("Let's play a game")
+      .andThen(shuffle)
+      .andThen(loop())
+      .andThen(print("Do you whant to play again?"))
+      .andThen(read)
+      .flatMap(s -> s.equals("n") ? quit : mainLoop());
+  }
+
+  static final StateT<IO<?>, Matrix, Unit> loop() {
+    return printMatrix
+      .andThen(readPosition)
+      .flatMap(pos -> pos.fold(Bricks::error, Bricks::click))
+      .andThen(gameover)
+      .flatMap(end -> end ? exit : loop());
+  }
 
   static final Monad<IO<?>> monad = Instances.monad();
 
@@ -21,7 +39,11 @@ public class Bricks {
 
   static final StateT<IO<?>, Matrix, String> read = StateT.lift(monad, console.readln());
 
-  static final StateT<IO<?>, Matrix, Integer> readInt = read.map(Integer::parseInt);
+  static final StateT<IO<?>, Matrix, Try<Integer>> readInt = read.map(Bricks::parseInt);
+
+  private static Try<Integer> parseInt(String string) {
+    return Try.of(() -> Integer.parseInt(string));
+  }
 
   static final StateT<IO<?>, Matrix, Unit> print(String text, Object...args) {
     return StateT.lift(monad, console.printf(text, args));
@@ -51,31 +73,14 @@ public class Bricks {
       printMatrix.andThen(numberOfTiles)
         .flatMap(n -> n > 0 ? print("Gameover!!!") : print("You win!!!"));
 
-  static final StateT<IO<?>, Matrix, Position> readPosition =
+  static final StateT<IO<?>, Matrix, Try<Position>> readPosition =
       StateT.map2(
           print("Please entry X").andThen(readInt),
           print("Please entry Y").andThen(readInt),
-          Position::new);
+          (x, y) -> Try.map2(x, y, Position::new));
 
   static final StateT<IO<?>, Matrix, Unit> error(Throwable error) {
     return print("Invalid position! %s", error).andThen(loop());
-  }
-
-  static final StateT<IO<?>, Matrix, Unit> loop() {
-    return printMatrix
-      .andThen(readPosition)
-      .flatMap(Bricks::click)
-      .andThen(gameover)
-      .flatMap(end -> end ? exit : loop());
-  }
-
-  static final StateT<IO<?>, Matrix, Unit> mainLoop() {
-    return print("Let's play a game")
-      .andThen(shuffle)
-      .andThen(loop())
-      .andThen(print("Do you whant to play again?"))
-      .andThen(read)
-      .flatMap(s -> s.equals("n") ? quit : mainLoop());
   }
 
   public static void main(String... args) {
