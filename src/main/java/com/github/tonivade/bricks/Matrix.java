@@ -45,7 +45,7 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
   }
 
   private static State<Matrix, Unit> cleanFallShift(Sequence<Position> toClean) {
-    return cleanS(toClean).andThen(fallS()).andThen(shiftS());
+    return cleanS(toClean).andThen(fallS).andThen(shiftS);
   }
 
   private static State<Matrix, Sequence<Position>> lookup(Position position) {
@@ -56,13 +56,9 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
     return State.modify(m -> m.clean(toClean));
   }
 
-  private static State<Matrix, Unit> fallS() {
-    return State.modify(Matrix::fall);
-  }
+  private static State<Matrix, Unit> fallS = State.modify(Matrix::fall);
 
-  private static State<Matrix, Unit> shiftS() {
-    return State.modify(Matrix::shift);
-  }
+  private static State<Matrix, Unit> shiftS = State.modify(Matrix::shift);
 
   public Matrix shuffle(Function1<Position, Color> nextColor) {
     return new Matrix(width, height, positions().map(p -> new Tile(p, nextColor.apply(p))));
@@ -247,6 +243,8 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
   }
 
   private String printTile(Integer x, Integer y) {
-    return atPosition(new Position(x, y)).map(tile -> tile.color().toString()).getOrElse(" ");
+    return atPosition(new Position(x, y))
+        .map(tile -> tile.color().toString())
+        .getOrElse(" ");
   }
 }
