@@ -202,7 +202,7 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
 
   private Option<Integer> nextX(int left) {
     return row(0).takeWhile(p -> p.x() < left)
-        .findFirst(not(this::isPresent)).map(Position::y);
+        .findFirst(not(this::isPresent)).map(Position::x);
   }
 
   private Option<Integer> nextY(int col, int top) {
