@@ -1,12 +1,14 @@
 plugins {
   id 'java'
+  id 'application'
+  id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'com.github.tonivade'
 version = '0.1-SNAPSHOT'
 
 repositories {
-  mavenLocal() 
+  mavenLocal()
   mavenCentral()
   maven {
     url = 'https://oss.sonatype.org/content/repositories/snapshots'
@@ -46,4 +48,14 @@ dependencies {
   runtimeOnly "com.github.tonivade:purefun-instances:$purefunVersion"
   testImplementation "org.junit.jupiter:junit-jupiter-engine:5.11.3"
   testImplementation "org.junit.platform:junit-platform-runner:1.11.3"
+}
+
+application {
+  mainClass = 'com.github.tonivade.bricks.Bricks'
+}
+
+shadowJar {
+  manifest {
+    attributes "Main-Class": "com.github.tonivade.bricks.Bricks"
+  }
 }

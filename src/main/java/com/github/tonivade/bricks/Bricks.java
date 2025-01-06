@@ -58,6 +58,8 @@ public class Bricks {
 
   static final StateT<IO<?>, Matrix, String> matrixToString = StateT.inspect(monad, Matrix::toString);
 
+  static final StateT<IO<?>, Matrix, Unit> clear = StateT.lift(monad, IO.exec(() -> System.out.print("\033[H\033[2J")));
+
   static final StateT<IO<?>, Matrix, Boolean> gameover = StateT.inspect(monad, Matrix::gameover);
 
   static final StateT<IO<?>, Matrix, Integer> numberOfTiles = StateT.inspect(monad, Matrix::size);
@@ -65,13 +67,14 @@ public class Bricks {
   static final StateT<IO<?>, Matrix, Unit> shuffle = StateT.modify(monad, m -> m.shuffle(Color::random));
 
   static final StateT<IO<?>, Matrix, Unit> printMatrix =
-      matrixToString.flatMap(Bricks::print)
+      clear
+        .andThen(matrixToString.flatMap(Bricks::print))
         .andThen(numberOfTiles)
         .flatMap(n -> print("%d tiles left", n));
 
   static final StateT<IO<?>, Matrix, Unit> exit =
       printMatrix.andThen(numberOfTiles)
-        .flatMap(n -> n > 0 ? print("Gameover!!!") : print("You win!!!"));
+        .flatMap(n -> n > 0 ? print("Game over!!!") : print("You win!!!"));
 
   static final StateT<IO<?>, Matrix, Try<Position>> readPosition =
       StateT.map2(
