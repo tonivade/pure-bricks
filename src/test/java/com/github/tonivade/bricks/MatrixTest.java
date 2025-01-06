@@ -31,7 +31,7 @@ class MatrixTest {
     System.out.println(matrix);
 
     assertTrue(matrix.isEmpty());
-    assertTrue(matrix.gameover());
+    assertTrue(matrix.gameOver());
     assertEquals(0, matrix.size());
   }
 
@@ -43,7 +43,7 @@ class MatrixTest {
 
     assertFalse(matrix.isEmpty());
     assertEquals(9, matrix.size());
-    assertEquals(some(new Tile(new Position(1, 2), Color.RED)), matrix.atPosition(new Position(1, 2)));
+    assertEquals(some(new Tile(new Position(1, 2), Color.RED)), matrix.atPosition(1, 2));
     assertTrue(matrix.isPresent(new Position(1, 2)));
   }
 
@@ -52,7 +52,7 @@ class MatrixTest {
     var matrix0 = new Matrix(3, 3, arrayOf(new Tile(new Position(0, 0), Color.RED)));
 
     System.out.println(matrix0);
-    var matrix1 = matrix0.atPosition(new Position(0, 0)).map(tile -> matrix0.move(tile, new Position(1, 1))).getOrElseThrow();
+    var matrix1 = matrix0.atPosition(0, 0).map(tile -> matrix0.move(tile, new Position(1, 1))).getOrElseThrow();
     System.out.println(matrix1);
 
     assertEquals(some(new Tile(new Position(0, 0), Color.RED)), matrix0.atPosition(new Position(0, 0)));
@@ -163,7 +163,7 @@ class MatrixTest {
     System.out.println(matrix1);
 
     assertEquals(arrayOf(Color.GREEN), matrix1.atRow(0).map(Tile::color));
-    assertTrue(matrix1.gameover());
+    assertTrue(matrix1.gameOver());
   }
 
   @Test
@@ -178,6 +178,6 @@ class MatrixTest {
     System.out.println(matrix1);
 
     assertEquals(arrayOf(Color.GREEN), matrix1.atRow(0).map(Tile::color));
-    assertTrue(matrix1.gameover());
+    assertTrue(matrix1.gameOver());
   }
 }

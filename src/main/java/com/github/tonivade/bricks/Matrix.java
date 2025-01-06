@@ -106,6 +106,10 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
         .getOrElse(ImmutableSet.empty());
   }
 
+  public Option<Tile> atPosition(int x, int y) {
+    return atPosition(new Position(x, y));
+  }
+
   public Option<Tile> atPosition(Position position) {
     return bricks.get(position);
   }
@@ -130,7 +134,7 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
     return bricks.isEmpty();
   }
 
-  public boolean gameover() {
+  public boolean gameOver() {
     return bricks.values().flatMap(this::search).isEmpty();
   }
 
@@ -191,7 +195,7 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
   }
 
   private Option<Matrix> tryMove(int col, int top) {
-    return atPosition(new Position(col, top))
+    return atPosition(col, top)
       .flatMap(t -> nextY(col, top)
           .map(nextY -> move(t, new Position(col, nextY))));
   }
@@ -243,7 +247,7 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
   }
 
   private String printTile(Integer x, Integer y) {
-    return atPosition(new Position(x, y))
+    return atPosition(x, y)
         .map(tile -> tile.color().toString())
         .getOrElse(" ");
   }
