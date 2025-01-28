@@ -22,6 +22,10 @@ public class Bricks {
   private static final Monad<IO<?>> monad = Instances.monad();
   private static final Console<IO<?>> console = Instances.console();
 
+  public static void main(String... args) {
+    mainLoop().run(new Matrix(10, 15)).fix(IOOf::toIO).unsafeRunSync();
+  }
+
   private static final StateT<IO<?>, Matrix, Unit> mainLoop() {
     return print("Let's play a game")
       .andThen(shuffle)
@@ -82,7 +86,8 @@ public class Bricks {
 
   private static final StateT<IO<?>, Matrix, Unit> printMatrix =
       clearScreen
-        .andThen(matrixToString.flatMap(Bricks::print))
+        .andThen(matrixToString)
+        .flatMap(Bricks::print)
         .andThen(numberOfTiles)
         .flatMap(n -> print("%d tiles left", n));
 
@@ -96,8 +101,4 @@ public class Bricks {
 
   private static final StateT<IO<?>, Matrix, Unit> sleep =
       StateT.lift(monad, IO.sleep(Duration.ofSeconds(1)));
-
-  public static void main(String... args) {
-    mainLoop().run(new Matrix(10, 15)).fix(IOOf::toIO).unsafeRunSync();
-  }
 }
