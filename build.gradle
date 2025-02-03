@@ -46,7 +46,8 @@ dependencies {
   implementation "com.github.tonivade:purefun-effect:$purefunVersion"
   implementation "com.github.tonivade:purefun-transformer:$purefunVersion"
   runtimeOnly "com.github.tonivade:purefun-instances:$purefunVersion"
-  testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+  testImplementation platform("org.junit:junit-bom:$junitVersion")
+  testImplementation "org.junit.jupiter:junit-jupiter-engine"
   testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 }
 
