@@ -29,18 +29,18 @@ public class Bricks {
   private static final StateT<IO<?>, Matrix, Unit> mainLoop() {
     return print("Let's play a game")
       .andThen(shuffle)
-      .andThen(loop())
+      .andThen(play())
       .andThen(print("Do you whant to play again?"))
       .andThen(read)
       .flatMap(s -> s.equals("n") ? quit : mainLoop());
   }
 
-  private static final StateT<IO<?>, Matrix, Unit> loop() {
+  private static final StateT<IO<?>, Matrix, Unit> play() {
     return printMatrix
       .andThen(readPosition)
       .flatMap(pos -> pos.fold(Bricks::error, Bricks::click))
       .andThen(gameOver)
-      .flatMap(end -> end ? exit : loop());
+      .flatMap(end -> end ? exit : play());
   }
 
   private static final StateT<IO<?>, Matrix, String> read = StateT.lift(monad, console.readln());
@@ -96,7 +96,7 @@ public class Bricks {
         .flatMap(n -> n > 0 ? print("Game over!!!") : print("You win!!!"));
 
   private static final StateT<IO<?>, Matrix, Unit> error(Throwable error) {
-    return print("Invalid position! %s", error).andThen(sleep).andThen(loop());
+    return print("Invalid position! %s", error).andThen(sleep).andThen(play());
   }
 
   private static final StateT<IO<?>, Matrix, Unit> sleep =
