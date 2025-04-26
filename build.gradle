@@ -17,7 +17,7 @@ repositories {
 
 java {
   toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
+    languageVersion = JavaLanguageVersion.of(24)
   }
   withJavadocJar()
   withSourcesJar()
@@ -26,13 +26,13 @@ java {
 compileJava {
   options.compilerArgs << '-Xlint:unchecked'
   options.compilerArgs << '-Xlint:rawtypes'
-  options.release = 21
+  options.release = 24
 }
 
 compileTestJava {
   options.compilerArgs << '-Xlint:unchecked'
   options.compilerArgs << '-Xlint:rawtypes'
-  options.release = 21
+  options.release = 24
 }
 
 test {
