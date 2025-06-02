@@ -30,7 +30,7 @@ public class Bricks {
     return print("Let's play a game")
       .andThen(shuffle)
       .andThen(play())
-      .andThen(print("Do you whant to play again?"))
+      .andThen(print("Do you want to play again?"))
       .andThen(read)
       .flatMap(s -> s.equals("n") ? quit : mainLoop());
   }
