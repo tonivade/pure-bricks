@@ -37,7 +37,7 @@ class MatrixTest {
 
   @Test
   void shouldNotEmptyWhenShuffle() {
-    var matrix = new Matrix(3, 3).shuffle(ignore -> Color.RED);
+    var matrix = new Matrix(3, 3).shuffle(_ -> Color.RED);
 
     System.out.println(matrix);
 
