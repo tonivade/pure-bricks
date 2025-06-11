@@ -37,8 +37,7 @@ public class Main extends Application {
 
   @Override
   public void start(Stage stage) throws Exception {
-
-    Scene scene = new Scene(pane, boardWidth + PADDING, boardHeight + PADDING);
+    var scene = new Scene(pane, boardWidth + PADDING, boardHeight + PADDING);
     scene.setFill(javafx.scene.paint.Color.WHITE);
 
     pane.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onClick);
