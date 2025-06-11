@@ -19,41 +19,51 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-  private Matrix matrix = new Matrix(10, 15).shuffle(Color::random);
-  private Pane pane = new Pane();
+  private static final int TILE_SIZE = 20;
+  private static final int PADDING = TILE_SIZE * 2;
 
-  private final int tileSize = 20;
-  private final int padding = tileSize * 2;
-  private final int boardHeight = matrix.height() * tileSize;
-  private final int boardWidth = matrix.width() * tileSize;
+  private final Pane pane;
+  private final int boardHeight;
+  private final int boardWidth;
+
+  private Matrix matrix;
+
+  public Main() {
+    matrix = new Matrix(10, 15).shuffle(Color::random);
+    pane = new Pane();
+    boardHeight = matrix.height() * TILE_SIZE;
+    boardWidth = matrix.width() * TILE_SIZE;
+  }
 
   @Override
   public void start(Stage stage) throws Exception {
 
-    Scene scene = new Scene(pane, boardWidth + padding, boardHeight + padding);
+    Scene scene = new Scene(pane, boardWidth + PADDING, boardHeight + PADDING);
     scene.setFill(javafx.scene.paint.Color.WHITE);
 
-    pane.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-      int x = (Double.valueOf(event.getSceneX()).intValue() / tileSize) - 1;
-      int y = matrix.height() - (Double.valueOf(event.getSceneY()).intValue() / tileSize);
-      this.matrix = Matrix.clickS(new Position(x, y)).runS(matrix);
-      pane.getChildren().clear();
-      pane.getChildren().addAll(paint());
-
-      if (this.matrix.gameOver()) {
-        if (this.matrix.isEmpty()) {
-          win();
-        } else {
-          gameOver();
-        }
-      }
-    });
+    pane.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onClick);
 
     pane.getChildren().clear();
     pane.getChildren().addAll(paint());
 
     stage.setScene(scene);
     stage.show();
+  }
+
+  private void onClick(MouseEvent event) {
+    int x = (Double.valueOf(event.getSceneX()).intValue() / TILE_SIZE) - 1;
+    int y = matrix.height() - (Double.valueOf(event.getSceneY()).intValue() / TILE_SIZE);
+    matrix = Matrix.clickS(new Position(x, y)).runS(matrix);
+    pane.getChildren().clear();
+    pane.getChildren().addAll(paint());
+
+    if (matrix.gameOver()) {
+      if (matrix.isEmpty()) {
+        win();
+      } else {
+        gameOver();
+      }
+    }
   }
 
   private void win() {
@@ -71,7 +81,7 @@ public class Main extends Application {
   }
 
   private void playAgain() {
-    this.matrix = matrix.shuffle(Color::random);
+    matrix = matrix.shuffle(Color::random);
     pane.getChildren().clear();
     pane.getChildren().addAll(paint());
   }
@@ -82,20 +92,20 @@ public class Main extends Application {
 
   private Rectangle toRectangle(Tile tile) {
     var rectangle = new Rectangle(
-        tileSize + (tile.position().x() * tileSize),
-       boardHeight - (tile.position().y() * tileSize),
-       tileSize,
-       tileSize);
+        TILE_SIZE + (tile.position().x() * TILE_SIZE),
+       boardHeight - (tile.position().y() * TILE_SIZE),
+       TILE_SIZE,
+       TILE_SIZE);
     rectangle.setFill(toColor(tile.color()));
     return rectangle;
   }
 
   private javafx.scene.paint.Color toColor(Color color) {
     return switch (color) {
-    case RED -> javafx.scene.paint.Color.RED;
-    case GREEN -> javafx.scene.paint.Color.GREEN;
-    case BLUE -> javafx.scene.paint.Color.BLUE;
-    case YELLOW -> javafx.scene.paint.Color.YELLOW;
+      case RED -> javafx.scene.paint.Color.RED;
+      case GREEN -> javafx.scene.paint.Color.GREEN;
+      case BLUE -> javafx.scene.paint.Color.BLUE;
+      case YELLOW -> javafx.scene.paint.Color.YELLOW;
     };
   }
 
