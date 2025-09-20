@@ -18,27 +18,27 @@ repositories {
 
 java {
   toolchain {
-    languageVersion = JavaLanguageVersion.of(24)
+    languageVersion = JavaLanguageVersion.of(25)
   }
   withJavadocJar()
   withSourcesJar()
 }
 
 javafx {
-    version = "24.0.1"
+    version = "25"
     modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.media' ]
 }
 
 compileJava {
   options.compilerArgs << '-Xlint:unchecked'
   options.compilerArgs << '-Xlint:rawtypes'
-  options.release = 24
+  options.release = 25
 }
 
 compileTestJava {
   options.compilerArgs << '-Xlint:unchecked'
   options.compilerArgs << '-Xlint:rawtypes'
-  options.release = 24
+  options.release = 25
 }
 
 test {
