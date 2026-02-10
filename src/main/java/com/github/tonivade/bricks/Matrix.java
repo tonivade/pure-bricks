@@ -8,7 +8,7 @@ import static com.github.tonivade.purefun.core.Function1.identity;
 import static com.github.tonivade.purefun.core.Matcher1.not;
 import static com.github.tonivade.purefun.core.Precondition.checkNonNull;
 import static com.github.tonivade.purefun.core.Precondition.checkPositive;
-import static com.github.tonivade.purefun.data.ImmutableMap.toImmutableMap;
+import static com.github.tonivade.purefun.data.Finisher.toImmutableMap;
 import static com.github.tonivade.purefun.data.Sequence.arrayOf;
 import static com.github.tonivade.purefun.data.Sequence.emptyArray;
 
@@ -16,6 +16,7 @@ import com.github.tonivade.purefun.core.Function1;
 import com.github.tonivade.purefun.core.Tuple;
 import com.github.tonivade.purefun.core.Tuple2;
 import com.github.tonivade.purefun.core.Unit;
+import com.github.tonivade.purefun.data.Finisher;
 import com.github.tonivade.purefun.data.ImmutableArray;
 import com.github.tonivade.purefun.data.ImmutableMap;
 import com.github.tonivade.purefun.data.ImmutableSet;
@@ -37,7 +38,7 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
   }
 
   public Matrix(int width, int height, Sequence<Tile> tiles) {
-    this(width, height, tiles.stream().collect(toImmutableMap(Tile::position, identity())));
+    this(width, height, tiles.pipeline().finish(input -> toImmutableMap(input, Tile::position, identity())));
   }
 
   public static State<Matrix, Unit> clickS(Position position) {
@@ -70,15 +71,13 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
 
   public Matrix moveColumn(int from, int to) {
     var newColumn = col(from)
-        .map(p -> atPosition(p).map(t -> new Tile(new Position(to, p.y()), t.color())))
-        .flatMap(Option::sequence);
+        .flatMap(p -> atPosition(p).map(t -> new Tile(new Position(to, p.y()), t.color())).sequence());
     return cleanColumn(from).addTiles(newColumn);
   }
 
   public Matrix moveRow(int from, int to) {
     var newRow = row(from)
-        .map(p -> atPosition(p).map(t -> new Tile(new Position(p.x(), to), t.color())))
-        .flatMap(Option::sequence);
+        .flatMap(p -> atPosition(p).map(t -> new Tile(new Position(p.x(), to), t.color())).sequence());
     return cleanRow(from).addTiles(newRow);
   }
 
@@ -96,7 +95,7 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
 
   public Matrix addTiles(Sequence<Tile> toAdd) {
     var newTiles = toAdd.map(t -> Tuple.of(t.position(), t))
-        .stream().collect(toImmutableMap(Tuple2::get1, Tuple2::get2));
+        .pipeline().finish(input -> toImmutableMap(input, Tuple2::get1, Tuple2::get2));
     return new Matrix(width, height, bricks.putAll(newTiles));
   }
 
@@ -115,11 +114,13 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
   }
 
   public Sequence<Tile> atCol(int x) {
-    return col(x).map(this::atPosition).flatMap(Option::sequence);
+    return col(x).pipeline()
+        .map(this::atPosition).flatMap(Option::sequence).finish(Finisher::toImmutableArray);
   }
 
   public Sequence<Tile> atRow(int y) {
-    return row(y).map(this::atPosition).flatMap(Option::sequence);
+    return row(y).pipeline()
+        .map(this::atPosition).flatMap(Option::sequence).finish(Finisher::toImmutableArray);
   }
 
   public boolean isPresent(Position position) {
