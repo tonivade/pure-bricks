@@ -151,15 +151,15 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
   }
 
   public ImmutableArray<Position> row(int y) {
-    return Range.of(0, width).map(x -> new Position(x, y)).asArray();
+    return Range.of(0, width).map(x -> new Position(x, y));
   }
 
   public ImmutableArray<ImmutableArray<Position>> cols() {
-    return Range.of(0, width).map(this::col).asArray();
+    return Range.of(0, width).map(this::col);
   }
 
   public ImmutableArray<Position> col(int x) {
-    return Range.of(0, height).map(y -> new Position(x, y)).asArray();
+    return Range.of(0, height).map(y -> new Position(x, y));
   }
 
   public Matrix fall() {
