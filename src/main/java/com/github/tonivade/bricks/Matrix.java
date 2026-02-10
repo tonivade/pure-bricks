@@ -38,7 +38,7 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
   }
 
   public Matrix(int width, int height, Sequence<Tile> tiles) {
-    this(width, height, toMap(tiles));
+    this(width, height, tiles.pipeline().<ImmutableMap<Position, Tile>>finish(input -> toImmutableMap(input, Tile::position, identity())));
   }
 
   public static State<Matrix, Unit> clickS(Position position) {
@@ -251,9 +251,5 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
     return atPosition(x, y)
         .map(tile -> tile.color().toString())
         .getOrElse(" ");
-  }
-
-  private static ImmutableMap<Position, Tile> toMap(Sequence<Tile> tiles) {
-    return tiles.pipeline().finish(input -> toImmutableMap(input, Tile::position, identity()));
   }
 }
