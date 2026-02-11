@@ -38,7 +38,7 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
   }
 
   public Matrix(int width, int height, Sequence<Tile> tiles) {
-    this(width, height, tiles.pipeline().<ImmutableMap<Position, Tile>>finish(input -> toImmutableMap(input, Tile::position, identity())));
+    this(width, height, tiles.pipeline().toImmutableMap(Tile::position, identity()));
   }
 
   public static State<Matrix, Unit> clickS(Position position) {
