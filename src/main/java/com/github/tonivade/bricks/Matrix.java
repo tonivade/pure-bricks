@@ -8,7 +8,6 @@ import static com.github.tonivade.purefun.core.Function1.identity;
 import static com.github.tonivade.purefun.core.Matcher1.not;
 import static com.github.tonivade.purefun.core.Precondition.checkNonNull;
 import static com.github.tonivade.purefun.core.Precondition.checkPositive;
-import static com.github.tonivade.purefun.data.Finisher.toImmutableMap;
 import static com.github.tonivade.purefun.data.Sequence.arrayOf;
 import static com.github.tonivade.purefun.data.Sequence.emptyArray;
 
@@ -16,7 +15,6 @@ import com.github.tonivade.purefun.core.Function1;
 import com.github.tonivade.purefun.core.Tuple;
 import com.github.tonivade.purefun.core.Tuple2;
 import com.github.tonivade.purefun.core.Unit;
-import com.github.tonivade.purefun.data.Finisher;
 import com.github.tonivade.purefun.data.ImmutableArray;
 import com.github.tonivade.purefun.data.ImmutableMap;
 import com.github.tonivade.purefun.data.ImmutableSet;
@@ -95,7 +93,7 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
 
   public Matrix addTiles(Sequence<Tile> toAdd) {
     var newTiles = toAdd.map(t -> Tuple.of(t.position(), t))
-        .pipeline().finish(input -> toImmutableMap(input, Tuple2::get1, Tuple2::get2));
+        .pipeline().toImmutableMap(Tuple2::get1, Tuple2::get2);
     return new Matrix(width, height, bricks.putAll(newTiles));
   }
 
@@ -115,12 +113,12 @@ public record Matrix(int width, int height, ImmutableMap<Position, Tile> bricks)
 
   public Sequence<Tile> atCol(int x) {
     return col(x).pipeline()
-        .map(this::atPosition).flatMap(Option::sequence).finish(Finisher::toImmutableArray);
+        .map(this::atPosition).flatMap(Option::sequence).toImmutableArray();
   }
 
   public Sequence<Tile> atRow(int y) {
     return row(y).pipeline()
-        .map(this::atPosition).flatMap(Option::sequence).finish(Finisher::toImmutableArray);
+        .map(this::atPosition).flatMap(Option::sequence).toImmutableArray();
   }
 
   public boolean isPresent(Position position) {
