@@ -25,6 +25,10 @@ java {
   withSourcesJar()
 }
 
+jacoco {
+  toolVersion = '0.8.14'
+}
+
 javafx {
     version = "25.0.2"
     modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.media' ]
@@ -46,6 +50,14 @@ test {
   useJUnitPlatform()
 
   reports.html.required = true
+}
+
+jacocoTestReport {
+  reports {
+    xml.required = true
+    html.required = true
+    xml.outputLocation = file("${buildDir}/reports/jacoco/report.xml")
+  }
 }
 
 dependencies {
