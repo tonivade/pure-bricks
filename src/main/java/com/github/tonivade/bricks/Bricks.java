@@ -15,11 +15,9 @@ import com.github.tonivade.purefun.transformer.StateT;
 import com.github.tonivade.purefun.type.Try;
 import com.github.tonivade.purefun.typeclasses.Console;
 import com.github.tonivade.purefun.typeclasses.Instances;
-import com.github.tonivade.purefun.typeclasses.Monad;
 
 public class Bricks {
 
-  private static final Monad<IO<?>> monad = Instances.monad();
   private static final Console<IO<?>> console = Instances.console();
 
   public static void main(String... args) {
@@ -43,7 +41,7 @@ public class Bricks {
       .flatMap(end -> end ? exit : play());
   }
 
-  private static final StateT<IO<?>, Matrix, String> read = StateT.lift(monad, console.readln());
+  private static final StateT<IO<?>, Matrix, String> read = StateT.lift(console.readln());
 
   private static final StateT<IO<?>, Matrix, Try<Integer>> readInt = read.map(Bricks::parseInt);
 
@@ -58,31 +56,31 @@ public class Bricks {
   }
 
   private static final StateT<IO<?>, Matrix, Unit> print(String text, Object...args) {
-    return StateT.lift(monad, console.printf(text, args));
+    return StateT.lift(console.printf(text, args));
   }
 
-  private static final StateT<IO<?>, Matrix, Unit> quit = StateT.pure(monad, unit());
+  private static final StateT<IO<?>, Matrix, Unit> quit = StateT.pure(unit());
 
   private static final StateT<IO<?>, Matrix, Unit> click(Position position) {
     return print("Clicked %s", position)
         .andThen(sleep)
-        .andThen(StateT.lift(monad, Matrix.clickS(position)::run));
+        .andThen(StateT.lift(Matrix.clickS(position)::run));
   }
 
   private static final StateT<IO<?>, Matrix, String> matrixToString =
-      StateT.inspect(monad, Matrix::toString);
+      StateT.inspect(Matrix::toString);
 
   private static final StateT<IO<?>, Matrix, Unit> clearScreen =
-      StateT.lift(monad, IO.exec(() -> System.out.print("\033[H\033[2J")));
+      StateT.lift(IO.exec(() -> System.out.print("\033[H\033[2J")));
 
   private static final StateT<IO<?>, Matrix, Boolean> gameOver =
-      StateT.inspect(monad, Matrix::gameOver);
+      StateT.inspect(Matrix::gameOver);
 
   private static final StateT<IO<?>, Matrix, Integer> numberOfTiles =
-      StateT.inspect(monad, Matrix::size);
+      StateT.inspect(Matrix::size);
 
   private static final StateT<IO<?>, Matrix, Unit> shuffle =
-      StateT.modify(monad, m -> m.shuffle(Color::random));
+      StateT.modify(m -> m.shuffle(Color::random));
 
   private static final StateT<IO<?>, Matrix, Unit> printMatrix =
       clearScreen
@@ -100,5 +98,5 @@ public class Bricks {
   }
 
   private static final StateT<IO<?>, Matrix, Unit> sleep =
-      StateT.lift(monad, IO.sleep(Duration.ofSeconds(1)));
+      StateT.lift(IO.sleep(Duration.ofSeconds(1)));
 }
