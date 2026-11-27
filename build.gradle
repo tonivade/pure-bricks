@@ -26,11 +26,11 @@ java {
 }
 
 jacoco {
-  toolVersion = '0.8.14'
+  toolVersion = '0.8.16'
 }
 
 javafx {
-    version = "25.0.2"
+    version = "25.0.5.1"
     modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.media' ]
 }
 
@@ -56,7 +56,7 @@ jacocoTestReport {
   reports {
     xml.required = true
     html.required = true
-    xml.outputLocation = file("${buildDir}/reports/jacoco/report.xml")
+    xml.outputLocation = layout.buildDirectory.file("reports/jacoco/report.xml")
   }
 }
 
